@@ -9,6 +9,7 @@ import java.util.List;
 
 public class InvoiceGeneratorTest {
     InvoiceGenerator invoiceGenerator= null;
+
     @BeforeEach
     public void setUp() {
         invoiceGenerator=new InvoiceGenerator();
@@ -55,6 +56,23 @@ public class InvoiceGeneratorTest {
             InvoiceSummary summary = invoiceGenerator.calculatFair(rides);
             InvoiceSummary expectedInvoiceSummary= new InvoiceSummary(2,30.0);
             Assertions.assertEquals(expectedInvoiceSummary, summary);
+        }
+    }
+
+    @Test
+    void givenDistanceAndTime_ShouldReturnTotalFair_AsPerRideType() {
+        String[] rideType = {"NORMAL", "PREMIUM"};
+        double distance=2.0;
+        int time=5;
+        List<String> list = Arrays.asList(rideType);
+        boolean normalRide = list.contains("NORMAL");
+        boolean premiumRide = list.contains("PREMIUM");
+        if(normalRide==true){
+            double normalFare = invoiceGenerator.calculatFair(distance,time);
+            Assertions.assertEquals(25, normalFare, 0.0);
+        } else if (premiumRide==true) {
+            double premiumFare = invoiceGenerator.calculatPremiumFair(distance,time);
+            Assertions.assertEquals(40,premiumFare,0.0);
         }
     }
 }
